@@ -11,18 +11,46 @@ class Server:
         self.sock.setblocking(False)
         self.sock.bind(self.address)
 
+        self.config = {}
+
         self.received_messages = deque()
         self.outgoing_messages = deque()
-        self.pending_ack_messages = deque()
+        self.messages_needing_ack = deque()
+
+        self.clients = {}
+        self.pending_disconnects = []
+
+        self.message_callbacks = {}
+
+        self.running = True
 
     def load_config_from_file(self):
         pass
 
-    def read_buffer(self):
+    def message(self, message_id):
+        def decorator(f):
+            self.message_callbacks[message_id] = f
+            return f
+
+        return decorator
+
+    def read_buffer(self, buffer, addr):
         pass
+
+    def listen(self):
+        while self.running:
+            try:
+                message_buffer, addr = self.sock.recvfrom(self.config['RECV_BYTES'])
+
+                if message_buffer:
+                    self.received_messages.appendleft(message_buffer)
+            except Exception:
+                pass
 
     def start(self):
-        pass
+        t = threading.Thread(target=self.listen)
+        t.start()
 
     def shutdown(self):
-        pass
+        self.sock.close()
+        self.running = False
