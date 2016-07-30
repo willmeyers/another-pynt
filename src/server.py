@@ -34,21 +34,21 @@ class Server:
 
         return decorator
 
-    def read_buffer(self, buffer, addr):
+    def read_message(self, message, addr):
         pass
 
-    def listen(self):
+    def run(self):
         while self.running:
             try:
-                message_buffer, addr = self.sock.recvfrom(self.config['RECV_BYTES'])
+                message, addr = self.sock.recvfrom(self.config['RECV_BYTES'])
 
-                if message_buffer:
-                    self.received_messages.appendleft(message_buffer)
+                if message:
+                    self.received_messages.appendleft(message)
             except Exception:
                 pass
 
     def start(self):
-        t = threading.Thread(target=self.listen)
+        t = threading.Thread(target=self.run)
         t.start()
 
     def shutdown(self):
