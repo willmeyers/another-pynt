@@ -48,6 +48,7 @@ class Server:
                 pass
 
     def start(self):
+        print('Started server thread.')
         t = threading.Thread(target=self.run)
         t.start()
 

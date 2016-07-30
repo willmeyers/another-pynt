@@ -1,6 +1,4 @@
 import socket
-import select
-
 
 
 class Client:
@@ -25,6 +23,3 @@ class Client:
             return f
 
         return decorator
-
-    def run(self):
-        pass
