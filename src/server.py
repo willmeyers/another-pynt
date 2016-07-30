@@ -35,15 +35,18 @@ class Server:
         return decorator
 
     def read_message(self, message, addr):
-        pass
+        message_id = message[:4].decode()
+        print(message_id)
+        self.message_callbacks[message_id](message)
 
     def run(self):
         while self.running:
             try:
-                message, addr = self.sock.recvfrom(self.config['RECV_BYTES'])
+                message, addr = self.sock.recvfrom(1024)
 
                 if message:
-                    self.received_messages.appendleft(message)
+                    print(message)
+                    self.read_message(message, addr)
             except Exception:
                 pass
 

@@ -1,9 +1,16 @@
 import select
+import socket
 from collections import deque
 
 
 class Connection:
-    def __init__(self):
+    def __init__(self, server_addr):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.setblocking(False)
+        self.sock.bind(('', 0))
+
+        self.server_addr = server_addr
         self.seq_number = 0
 
         self.received_messages = deque()
@@ -11,7 +18,7 @@ class Connection:
         self.messages_needing_ack = deque()
 
     def simple_send(self, message):
-        pass
+        self.sock.sendto(message, self.server_addr)
 
     def reliable_send(self, message):
         pass
@@ -29,15 +36,16 @@ class Connection:
 
         for j in w:
             if j == sender_sock:
-                message = Message()
-                self.outgoing_messages.appendleft(message.pack())
+                if self.outgoing_messages:
+                    sender_sock.sendto(self.outgoing_messages.pop(), recv_addr)
+
 
 class Message:
-    def __init__(self):
+    def __init__(self, message_id, datatypes):
         pass
 
-    def pack(self):
+    def pack(self, values):
         pass
 
-    def unpack(self):
+    def unpack(self, values):
         pass

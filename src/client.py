@@ -1,18 +1,22 @@
 import socket
+import select
+from .net import Connection
 
 
 class Client:
     def __init__(self):
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.sock.setblocking(False)
-        self.sock.bind(('', 0))
+        self.connection = None
 
         self.config = {}
 
         self.message_callbacks = {}
 
         self.running = True
+
+    def connect(self, server_addr):
+        print('Attempting connection...')
+        self.connection = Connection(server_addr)
+        self.connection.simple_send(b'CONN')
 
     def load_config_from_file(self):
         pass
@@ -23,3 +27,6 @@ class Client:
             return f
 
         return decorator
+
+    def run(self):
+        pass
