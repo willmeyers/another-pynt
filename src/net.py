@@ -15,13 +15,9 @@ class Connection:
 
         self.received_messages = deque()
         self.outgoing_messages = deque()
-        self.messages_needing_ack = deque()
 
     def simple_send(self, message):
         self.sock.sendto(message, self.server_addr)
-
-    def reliable_send(self, message):
-        pass
 
     def update(self):
         pass
@@ -41,11 +37,13 @@ class Connection:
 
 
 class Message:
-    def __init__(self, message_id, datatypes):
-        pass
+    def __init__(self, message_id, *message_data):
+        self.message_id = message_id
+        self.message_data = message_data
 
-    def pack(self, values):
-        pass
+    def pack(self, *args):
+        for value in args:
+            pass
 
-    def unpack(self, values):
+    def unpack(self):
         pass
