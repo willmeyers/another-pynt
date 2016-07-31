@@ -13,14 +13,15 @@ class Connection:
         self.server_addr = server_addr
         self.seq_number = 0
 
-        self.received_messages = deque()
-        self.outgoing_messages = deque()
-        self.messages_needing_ack = deque()
+        self.recv_messages = deque()
+        self.sent_messages = deque()
+        self.ack_messages = deque()
 
     def simple_send(self, message):
         self.sock.sendto(message, self.server_addr)
 
     def reliable_send(self, message):
+        # TODO
         pass
 
     def update(self):
