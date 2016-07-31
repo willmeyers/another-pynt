@@ -67,7 +67,7 @@ class Message:
         return fmt
 
     def pack(self, *args):
-        self.message_data = self._msg_struct.pack(*args)
+        return self._msg_struct.pack(*args)
 
     def unpack(self, binary_message):
         return self._msg_struct.unpack(binary_message)
