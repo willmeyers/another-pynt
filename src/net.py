@@ -43,6 +43,7 @@ class Message:
     def __init__(self, message_id, message_datatypes):
         self.message_id = message_id
         self.message_datatypes = message_datatypes
+        self.message_data = b''
 
         self._msg_struct = struct.Struct(self._get_fmt_string())
 
@@ -66,8 +67,7 @@ class Message:
         return fmt
 
     def pack(self, *args):
-        for value in args:
-            pass
+        self.message_data = self._msg_struct.pack(*args)
 
     def unpack(self, binary_message):
-        pass
+        return self._msg_struct.unpack(binary_message)
