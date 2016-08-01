@@ -11,7 +11,11 @@ class Server:
         self.sock.setblocking(False)
         self.sock.bind(self.address)
 
-        self.config = {}
+        self.config = {
+            'HOST': host,
+            'PORT': port,
+            'RECV_BYTES': 1024
+        }
 
         self.received_messages = deque()
         self.outgoing_messages = deque()
@@ -23,9 +27,6 @@ class Server:
         self.message_callbacks = {}
 
         self.running = True
-
-    def load_config_from_file(self):
-        pass
 
     def message(self, message_id):
         def decorator(f):
