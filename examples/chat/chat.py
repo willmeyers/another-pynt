@@ -13,7 +13,10 @@ class ChatDemo(Frame, Client):
         self.frame.grid()
         self.grid()
 
+        self.host_entry_text = StringVar()
+        self.port_entry_text = StringVar()
         self.chat_entry_text = StringVar()
+
         self.chat_window = Text(self.frame, width=64, height=20, bg='white')
         self.chat_window.insert(END, '[!] NOT CONNECTED\n')
         self.chat_window.configure(state=DISABLED)
@@ -68,13 +71,15 @@ class ChatDemo(Frame, Client):
 
         host_label = Label(top, text='Host')
         host_label.grid(column=0, row=0, sticky=W, padx=(5,5), pady=(0,10), columnspan=1)
-        host_entry = Entry(top, width=32)
+        host_entry = Entry(top, width=32, textvariable=self.host_entry_text)
         host_entry.grid(column=1, row=0, sticky=W, padx=(5,5), pady=(0,10), columnspan=1)
+        host_entry.bind('<Return>', self.connect_to_server)
 
         port_label = Label(top, text='Port')
         port_label.grid(column=0, row=1, sticky=W, padx=(5,5), pady=(0,10), columnspan=1)
-        port_entry = Entry(top, width=32)
+        port_entry = Entry(top, width=32, textvariable=self.port_entry_text)
         port_entry.grid(column=1, row=1, sticky=W, padx=(5,5), pady=(0,10), columnspan=1)
+        port_entry.bind('<Return>', self.connect_to_server)
 
         conn_button = Button(top, text='Connect', command=self.connect_to_server)
         conn_button.grid(column=1, row=2, sticky=E, padx=(5,5), pady=(0,10), columnspan=1)
@@ -83,11 +88,12 @@ class ChatDemo(Frame, Client):
         pass
 
     def connect_to_server(self):
-        pass
+        self.connect((self.host_entry_text.get(), int(self.port_entry_text.get())))
 
     def send_chat_message(self):
         self.chat_window.configure(state=NORMAL)
         m = self.chat_message.pack(self.chat_entry_text.get().encode())
+        self.simple_send(m)
         self.chat_window.insert(END, m.decode()+'\n')
         self.chat_window.configure(state=DISABLED)
 
