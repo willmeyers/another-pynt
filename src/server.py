@@ -43,7 +43,7 @@ class Server:
     def run(self):
         while self.running:
             try:
-                message, addr = self.sock.recvfrom(1024)
+                message, addr = self.sock.recvfrom(self.config['RECV_BYTES'])
 
                 if message:
                     print(message)
