@@ -18,6 +18,10 @@ class Connection:
         self.outgoing_messages = deque()
 
     def simple_send(self, message):
+        """ Sends a packed and encoded message to the corresponding server address.
+
+            message: A message instance
+        """
         self.sock.sendto(message, self.server_addr)
 
     def update(self):
@@ -38,6 +42,13 @@ class Connection:
 
 
 class Message:
+    """ The Message object grants the ability to create simple packets of data.
+        Messages must be given an identifier (4 bytes) and a tuple of datatypes
+        that the message will store.
+
+        example_message = Message('EXPL', ('int', 'int', 'float'))
+
+    """
     VALID_DATAYPES = ['int', 'float', 'char', 'string', 'bool']
 
     def __init__(self, message_id, message_datatypes):
@@ -48,6 +59,9 @@ class Message:
         self._msg_struct = struct.Struct(self._get_fmt_string())
 
     def _get_fmt_string(self):
+        """ Returns the format string required for the message struct based on the datatpyes.
+
+        """
         fmt = '>'
         for datatype in self.message_datatypes:
             if datatype in self.VALID_DATAYPES:
@@ -67,7 +81,16 @@ class Message:
         return fmt
 
     def pack(self, *args):
+        """ Returns a byte string given a list of arguments
+
+            example_message = Message('EXPL', ('int', 'int', 'float'))
+            message_to_send = example_message.pack(14, 89, 0.67)
+
+        """
         return self._msg_struct.pack(*args)
 
     def unpack(self, binary_message):
+        """ Returns a tuple with the unpacked values from the message.
+
+        """
         return self._msg_struct.unpack(binary_message)
