@@ -9,8 +9,14 @@ class ChatDemo(Frame, Client):
         Frame.__init__(self, root)
         Client.__init__(self)
         self.root = root
+        self.frame = Frame(self.root)
+        self.frame.grid()
+        self.grid()
 
         self.chat_entry_text = StringVar()
+        self.chat_window = Text(self.frame, width=64, height=20, bg='white')
+        self.chat_window.insert(END, '[!] NOT CONNECTED\n')
+        self.chat_window.configure(state=DISABLED)
 
         self.build_gui()
 
@@ -18,10 +24,6 @@ class ChatDemo(Frame, Client):
 
     def build_gui(self):
         self.root.title("Chat Demo")
-
-        frame = Frame(self.root)
-        frame.grid()
-        self.grid()
 
         menubar = Menu(self.root)
 
@@ -33,16 +35,14 @@ class ChatDemo(Frame, Client):
         menubar.add_cascade(label='Chat', menu=chatbar)
         self.root.config(menu=menubar)
 
-        chat_window = Text(frame, width=64, height=20, bg='white')
-        chat_window.configure(state=DISABLED)
-        chat_window.grid(column=0, row=0, padx=(5,5), pady=(0,10), columnspan=1)
+        self.chat_window.grid(column=0, row=0, padx=(5,5), pady=(0,10), columnspan=1)
 
-        chat_entry = Entry(frame, width=85, textvariable=self.chat_entry_text)
+        chat_entry = Entry(self.frame, width=85, textvariable=self.chat_entry_text)
         chat_entry.grid(column=0, row=1, sticky=W, padx=(5,5), pady=(0,10), columnspan=1)
         chat_entry.bind('<Return>', self.send_chat_message)
         chat_entry.focus_set()
 
-        send_button = Button(frame, text="Send", command=self.send_chat_message)
+        send_button = Button(self.frame, text="Send", command=self.send_chat_message)
         send_button.grid(row=1, column=1, columnspan=1, padx=(5,5), pady=(0,0), sticky=E+W)
 
     def open_server_host_dialog(self):
@@ -59,7 +59,7 @@ class ChatDemo(Frame, Client):
         port_entry = Entry(top, width=32)
         port_entry.grid(column=1, row=1, sticky=W, padx=(5,5), pady=(0,10), columnspan=1)
 
-        start_button = Button(top, text='Start', command=self.send_chat_message)
+        start_button = Button(top, text='Start', command=self.start_server)
         start_button.grid(column=1, row=2, sticky=E, padx=(5,5), pady=(0,10), columnspan=1)
 
     def open_server_connect_dialog(self):
@@ -76,11 +76,21 @@ class ChatDemo(Frame, Client):
         port_entry = Entry(top, width=32)
         port_entry.grid(column=1, row=1, sticky=W, padx=(5,5), pady=(0,10), columnspan=1)
 
-        conn_button = Button(top, text='Connect', command=self.send_chat_message)
+        conn_button = Button(top, text='Connect', command=self.connect_to_server)
         conn_button.grid(column=1, row=2, sticky=E, padx=(5,5), pady=(0,10), columnspan=1)
 
+    def start_server(self):
+        pass
+
+    def connect_to_server(self):
+        pass
+
     def send_chat_message(self):
+        self.chat_window.configure(state=NORMAL)
         m = self.chat_message.pack(self.chat_entry_text.get().encode())
+        self.chat_window.insert(END, m.decode()+'\n')
+        self.chat_window.configure(state=DISABLED)
+
 
 def main():
     root = Tk()
