@@ -24,9 +24,6 @@ class Server:
 
         self.running = True
 
-    def load_config_from_file(self):
-        pass
-
     def message(self, message_id):
         def decorator(f):
             self.message_callbacks[message_id] = f
@@ -38,6 +35,9 @@ class Server:
         message_id = message[:4].decode()
         print(message_id)
         self.message_callbacks[message_id](message)
+
+    def accept_connection(self):
+        pass
 
     def run(self):
         while self.running:

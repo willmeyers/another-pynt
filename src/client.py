@@ -7,18 +7,14 @@ class Client:
     def __init__(self):
         self.connection = None
 
-        self.config = {}
-
         self.message_callbacks = {}
 
         self.running = True
 
     def connect(self, server_addr):
-        print('Attempting connection...')
         self.connection = Connection(server_addr)
-        self.connection.simple_send(b'CONN')
 
-    def load_config_from_file(self):
+    def simple_send(self, message):
         pass
 
     def message(self, message_id):
