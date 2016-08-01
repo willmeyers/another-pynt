@@ -1,5 +1,6 @@
 import select
 import socket
+import struct
 from collections import deque
 
 
@@ -42,11 +43,36 @@ class Connection:
 
 
 class Message:
-    def __init__(self, message_id, datatypes):
-        pass
+    VALID_DATAYPES = ['int', 'float', 'char', 'string', 'bool']
 
-    def pack(self, values):
-        pass
+    def __init__(self, message_id, message_datatypes):
+        self.message_id = message_id
+        self.message_datatypes = message_datatypes
 
-    def unpack(self, values):
-        pass
+        self._msg_struct = struct.Struct(self._get_fmt_string())
+        self.message_data = b''
+
+    def _get_fmt_string(self):
+        fmt = '>'
+        for datatype in self.message_datatypes:
+            if datatype in self.VALID_DATAYPES:
+                if datatype == 'int':
+                    fmt += 'I'
+                if datatype == 'float':
+                    fmt += 'f'
+                if datatype == 'char':
+                    pass
+                if datatype == 'string':
+                    fmt += '32s'
+                if datatype == 'bool':
+                    pass
+            else:
+                raise('Not valid datatype!')
+
+        return fmt
+
+    def pack(self, *args):
+        return self._msg_struct.pack(*args)
+
+    def unpack(self, binary_message):
+        return self._msg_struct.unpack(binary_message)
