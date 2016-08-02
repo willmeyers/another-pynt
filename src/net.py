@@ -51,10 +51,9 @@ class Message:
     """
     VALID_DATAYPES = ['int', 'float', 'char', 'string', 'bool']
 
-    def __init__(self, message_id, message_datatypes):
+    def __init__(self, message_id, message_datatypes, max_str_len=32):
         self.message_id = message_id
         self.message_datatypes = message_datatypes
-        self.message_data = b''
 
         self._msg_struct = struct.Struct(self._get_fmt_string())
 
@@ -69,14 +68,16 @@ class Message:
                     fmt += 'I'
                 if datatype == 'float':
                     fmt += 'f'
+                if datatype == 'double':
+                    fmt += 'd'
                 if datatype == 'char':
-                    pass
+                    fmt += 'c'
                 if datatype == 'string':
-                    pass
+                    fmt += 's'
                 if datatype == 'bool':
-                    pass
+                    fmt += 'b'
             else:
-                raise('Not valid datatype!')
+                raise('Error')
 
         return fmt
 
