@@ -90,8 +90,8 @@ class Message:
         """
         return self._msg_struct.pack(*args)
 
-    def unpack(self, binary_message):
+    def unpack(self, raw_message):
         """ Returns a tuple with the unpacked values from the message.
 
         """
-        return self._msg_struct.unpack(binary_message)
+        return self._msg_struct.unpack(raw_message)

@@ -28,6 +28,9 @@ class Server:
 
         self.running = True
 
+    def update(self):
+        pass
+
     def message(self, message_id):
         def decorator(f):
             self.message_callbacks[message_id] = f
@@ -39,6 +42,9 @@ class Server:
         message_id = message[:4].decode()
         print(message_id)
         self.message_callbacks[message_id](message)
+
+    def send_message(self, addr):
+        pass
 
     def run(self):
         while self.running:
