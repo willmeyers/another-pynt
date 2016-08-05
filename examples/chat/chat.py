@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from src.client import Client
+from server import chat_server
 from src.net import Message
 
 
@@ -85,7 +86,11 @@ class ChatDemo(Frame, Client):
         conn_button.grid(column=1, row=2, sticky=E, padx=(5,5), pady=(0,10), columnspan=1)
 
     def start_server(self):
-        pass
+        self.chat_window.configure(state=NORMAL)
+        self.chat_window.insert(END, 'Server started on host and port\n')
+        self.chat_window.configure(state=DISABLED)
+
+        chat_server.start()
 
     def connect_to_server(self):
         self.connect((self.host_entry_text.get(), int(self.port_entry_text.get())))
