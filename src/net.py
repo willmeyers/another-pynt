@@ -51,7 +51,7 @@ class Message:
     """
     VALID_DATAYPES = ['int', 'float', 'char', 'string', 'bool']
 
-    def __init__(self, message_id, message_datatypes, max_str_len=32):
+    def __init__(self, message_id, message_datatypes=None, max_str_len=32):
         self.message_id = message_id
         self.message_datatypes = message_datatypes
 
@@ -95,3 +95,8 @@ class Message:
 
         """
         return self._msg_struct.unpack(raw_message)
+
+
+# Default and base messages for use
+connect = Message('CONN')
+keep_alive = Message('ALVE')
