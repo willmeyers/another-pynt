@@ -14,15 +14,27 @@ class Connection:
         self.server_addr = server_addr
         self.seq_number = 0
 
+<<<<<<< HEAD
         self.received_messages = deque()
         self.outgoing_messages = deque()
+=======
+        self.recv_messages = deque()
+        self.sent_messages = deque()
+        self.ack_messages = deque()
+>>>>>>> examples
 
     def simple_send(self, message):
         """ Sends a packed and encoded message to the corresponding server address.
 
+<<<<<<< HEAD
             message: A message instance
         """
         self.sock.sendto(message, self.server_addr)
+=======
+    def reliable_send(self, message):
+        # TODO
+        pass
+>>>>>>> examples
 
     def update(self):
         pass
@@ -42,6 +54,7 @@ class Connection:
 
 
 class Message:
+<<<<<<< HEAD
     """ The Message object grants the ability to create simple packets of data.
         Messages must be given an identifier (4 bytes) and a tuple of datatypes
         that the message will store.
@@ -100,3 +113,38 @@ class Message:
 # Default and base messages for use
 connect = Message('CONN')
 keep_alive = Message('ALVE')
+=======
+    VALID_DATAYPES = ['int', 'float', 'char', 'string', 'bool']
+
+    def __init__(self, message_id, message_datatypes):
+        self.message_id = message_id
+        self.message_datatypes = message_datatypes
+
+        self._msg_struct = struct.Struct(self._get_fmt_string())
+        self.message_data = b''
+
+    def _get_fmt_string(self):
+        fmt = '>'
+        for datatype in self.message_datatypes:
+            if datatype in self.VALID_DATAYPES:
+                if datatype == 'int':
+                    fmt += 'I'
+                if datatype == 'float':
+                    fmt += 'f'
+                if datatype == 'char':
+                    pass
+                if datatype == 'string':
+                    fmt += '32s'
+                if datatype == 'bool':
+                    pass
+            else:
+                raise('Not valid datatype!')
+
+        return fmt
+
+    def pack(self, *args):
+        return self._msg_struct.pack(*args)
+
+    def unpack(self, binary_message):
+        return self._msg_struct.unpack(binary_message)
+>>>>>>> examples

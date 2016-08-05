@@ -28,9 +28,12 @@ class Server:
 
         self.running = True
 
+<<<<<<< HEAD
     def update(self):
         pass
 
+=======
+>>>>>>> examples
     def message(self, message_id):
         def decorator(f):
             self.message_callbacks[message_id] = f
@@ -43,7 +46,11 @@ class Server:
         print(message_id)
         self.message_callbacks[message_id](message)
 
+<<<<<<< HEAD
     def send_message(self, addr):
+=======
+    def accept_connection(self):
+>>>>>>> examples
         pass
 
     def run(self):
