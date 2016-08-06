@@ -4,11 +4,17 @@ from .net import Connection
 
 
 class Client:
+    connection = Connection
+    server_address = None
+
+    default_config = {
+        'MAX_RECV_BYTES': 1024
+    }
+
     def __init__(self):
-        self.connection = None
         self.server_addr = None
 
-        self.message_callbacks = {}
+        self.message_map = {}
 
         self.running = True
 
@@ -18,6 +24,9 @@ class Client:
 
     def simple_send(self, message):
         self.connection.simple_send(message)
+
+    def add_message_rule(self, message_id):
+        pass
 
     def message(self, message_id):
         def decorator(f):

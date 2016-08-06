@@ -4,18 +4,18 @@ from collections import deque
 
 
 class Server:
+    default_config = {
+        'HOST': 'localhost',
+        'PORT': 8080,
+        'MAX_RECV_BYTES': 1024
+    }
+
     def __init__(self, host, port):
         self.address = (host, port)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.setblocking(False)
         self.sock.bind(self.address)
-
-        self.config = {
-            'HOST': host,
-            'PORT': port,
-            'RECV_BYTES': 1024
-        }
 
         self.received_messages = deque()
         self.outgoing_messages = deque()
@@ -24,13 +24,16 @@ class Server:
         self.clients = {}
         self.pending_disconnects = []
 
-        self.message_callbacks = {}
+        self.message_map = {}
 
         self.running = True
 
     def update(self):
         pass
 
+    def add_message_rule(self, message_id):
+        pass
+    
     def message(self, message_id):
         def decorator(f):
             self.message_callbacks[message_id] = f
