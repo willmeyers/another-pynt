@@ -33,7 +33,7 @@ class Server:
 
     def add_message_rule(self, message_id):
         pass
-    
+
     def message(self, message_id):
         def decorator(f):
             self.message_callbacks[message_id] = f
