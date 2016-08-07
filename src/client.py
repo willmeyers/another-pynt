@@ -7,7 +7,8 @@ class Client:
     server_address = None
 
     default_config = {
-        'MAX_RECV_BYTES': 1024
+        'MAX_RECV_BYTES': 1024,
+        'TICK_RATE': 30,
     }
 
     def __init__(self, config=None):
