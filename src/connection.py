@@ -13,7 +13,6 @@ class Connection:
         self.server_addr = server_addr
         self.seq_number = 0
 
-
         self.received_messages = deque()
         self.outgoing_messages = deque()
 
@@ -21,10 +20,8 @@ class Connection:
         self.sent_messages = deque()
         self.ack_messages = deque()
 
-
     def simple_send(self, message):
         """ Sends a packed and encoded message to the corresponding server address.
-
 
             message: A message instance
         """
@@ -32,6 +29,7 @@ class Connection:
 
     def reliable_send(self, message):
         # TODO
+        # Sends a reliable message
         pass
 
     def update(self):

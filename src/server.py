@@ -36,7 +36,7 @@ class Server:
 
     def message(self, message_id):
         def decorator(f):
-            self.message_callbacks[message_id] = f
+            self.add_message_rule(message_id)
             return f
 
         return decorator
