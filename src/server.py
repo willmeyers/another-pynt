@@ -7,10 +7,17 @@ class Server:
     default_config = {
         'HOST': 'localhost',
         'PORT': 8080,
-        'MAX_RECV_BYTES': 1024
+        'MAX_RECV_BYTES': 1024,
+        'TICK_RATE': 30
     }
 
-    def __init__(self, host, port):
+    def __init__(self, host, port, config=None):
+        if config is not None:
+            self.config = config
+        else:
+            self.config = self.default_config
+        # Have to setup host and port config
+
         self.address = (host, port)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
