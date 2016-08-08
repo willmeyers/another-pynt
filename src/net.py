@@ -11,10 +11,10 @@ class Message:
     """
     VALID_DATAYPES = ['int', 'float', 'char', 'string', 'bool']
 
-    def __init__(self, message_id, message_datatypes=None, max_str_len=32):
+    def __init__(self, message_id, message_datatypes, max_str_len=32):
         self.message_id = message_id
         self.message_datatypes = message_datatypes
-
+        self.max_str_len = max_str_len
         self._msg_struct = struct.Struct(self._get_fmt_string())
 
     def _get_fmt_string(self):
@@ -33,7 +33,7 @@ class Message:
                 if datatype == 'char':
                     fmt += 'c'
                 if datatype == 'string':
-                    fmt += 's'
+                    fmt += str(self.max_str_len)+'s'
                 if datatype == 'bool':
                     fmt += 'b'
             else:
@@ -55,10 +55,5 @@ class Message:
 
         """
         return self._msg_struct.unpack(raw_message)
-
-
-# Default and base messages for use
-connect = Message('CONN')
-keep_alive = Message('ALVE')
 
 

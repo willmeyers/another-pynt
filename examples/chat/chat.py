@@ -1,14 +1,13 @@
 from tkinter import *
 from tkinter import ttk
 from src.client import Client
-from server import chat_server
+from .server import chat_server
 from src.net import Message
 
 
-class ChatDemo(Frame, Client):
+class ChatDemo(Frame):
     def __init__(self, root):
         Frame.__init__(self, root)
-        Client.__init__(self)
         self.root = root
         self.frame = Frame(self.root)
         self.frame.grid()
