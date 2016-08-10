@@ -33,14 +33,35 @@ class Client:
         self.running = True
 
     def simple_send(self, message):
+        ''' Sends an unreliable message to the configured server address. Simple
+        send is recommended for bulk sends. Depending on the application; sending
+        keyboard input, updating variables...
+
+        :param message: a message object
+        '''
         pass
 
-    def add_message_rule(self, message_id):
-        pass
+    def add_message_rule(self, message_id, message_function):
+        ''' Adds a message rule to the message map. This is the same as using the
+        message decorator.
+
+        :param message_id: the message id
+        :param message_function: the function bound to the message id
+        '''
+        self.message_map[message_id] = message_function
 
     def message(self, message_id):
+        ''' A decorator function for easy message rule mapping.
+
+            @message('CHAT')
+            def chat_message(text):
+                # display chat message
+                ...
+
+        :param message_id: the message id
+        '''
         def decorator(f):
-            self.add_message_rule(message_id)
+            self.add_message_rule(message_id, f)
             return f
 
         return decorator
