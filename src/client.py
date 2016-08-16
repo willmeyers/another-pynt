@@ -26,11 +26,12 @@ class Client:
         self.outgoing_messages = deque()
         self.ack_messages = deque()
 
-        self.server_addr = None
-
         self.message_map = {}
 
         self.running = True
+
+    def send_connect_request(self, server_addr):
+        pass
 
     def simple_send(self, message):
         ''' Sends an unreliable message to the configured server address. Simple

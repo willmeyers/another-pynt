@@ -9,7 +9,7 @@ class Message:
         example_message = Message('EXPL', ('int', 'int', 'float'))
 
     """
-    VALID_DATAYPES = ['int', 'float', 'char', 'string', 'bool']
+    VALID_DATAYPES = ['int', 'float', 'char', 'string', 'varstring', 'bool']
 
     def __init__(self, message_id, message_datatypes, max_str_len=32):
         self.message_id = message_id
@@ -37,7 +37,7 @@ class Message:
                 if datatype == 'bool':
                     fmt += 'b'
             else:
-                raise('Error')
+                raise('Bad datatype')
 
         return fmt
 

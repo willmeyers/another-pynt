@@ -8,7 +8,8 @@ class Server:
         'HOST': 'localhost',
         'PORT': 8080,
         'MAX_RECV_BYTES': 1024,
-        'TICK_RATE': 30
+        'TICK_RATE': 30,
+        'ACK_REFRESH_TIME': 200 # in ms
     }
 
     def __init__(self, host, port, config=None):

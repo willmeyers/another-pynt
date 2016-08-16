@@ -1,12 +1,13 @@
 from tkinter import *
 from tkinter import ttk
 from src.client import Client
-from .server import chat_server
+from server import chat_server
 from src.net import Message
 
 
-class ChatDemo(Frame):
+class ChatDemo(Client, Frame):
     def __init__(self, root):
+        Client.__init__(self)
         Frame.__init__(self, root)
         self.root = root
         self.frame = Frame(self.root)
@@ -92,7 +93,7 @@ class ChatDemo(Frame):
         chat_server.start()
 
     def connect_to_server(self):
-        self.connect((self.host_entry_text.get(), int(self.port_entry_text.get())))
+        self.send_connect_request((self.host_entry_text.get(), int(self.port_entry_text.get())))
 
     def send_chat_message(self):
         self.chat_window.configure(state=NORMAL)
