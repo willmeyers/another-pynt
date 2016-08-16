@@ -53,11 +53,19 @@ class Server:
         print(message_id)
         self.message_callbacks[message_id](message)
 
-
-    def send_message(self, addr):
+    def accept_connection(self):
         pass
 
-    def accept_connection(self):
+    def simple_send(self, message, addr):
+        pass
+
+    def reliable_send(self, message, addr):
+        pass
+
+    def simple_broadcast(self, message):
+        pass
+
+    def reliable_broadcast(self, message):
         pass
 
     def run(self):
