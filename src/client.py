@@ -40,7 +40,10 @@ class Client:
 
         :param message: a message object
         '''
-        pass
+        self.outgoing_messages.append(message)
+        while self.outgoing_messages:
+            m = self.outgoing_messages.pop()
+            self.sock.sendto(m, ('localhost', 8080))
 
     def add_message_rule(self, message_id, message_function):
         ''' Adds a message rule to the message map. This is the same as using the
@@ -72,11 +75,5 @@ class Client:
         for i in r:
             if i == self.sock:
                 message, addr = self.sock.recvfrom(1024)
-                print(message)
-                self.incoming_messages.appendleft((message, addr))
-
-        for j in w:
-            if j == self.sock:
-                if self.outgoing_messages:
-                    pass
-                    #self.sock.sendto(self.outgoing_messages.pop(), recv_addr)
+                print('FROM SERVER', message)
+                self.incoming_messages.append((message, addr))

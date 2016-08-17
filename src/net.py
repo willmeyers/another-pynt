@@ -11,11 +11,12 @@ class Message:
     """
     VALID_DATAYPES = ['int', 'float', 'char', 'string', 'varstring', 'bool']
 
-    def __init__(self, message_id, message_datatypes, max_str_len=32):
+    def __init__(self, message_id, message_datatypes=(), max_str_len=32, requires_ack=False):
         self.message_id = message_id
         self.message_datatypes = message_datatypes
         self.max_str_len = max_str_len
         self._msg_struct = struct.Struct(self._get_fmt_string())
+        self.requires_ack = requires_ack
 
     def _get_fmt_string(self):
         """ Returns the format string required for the message struct based on the datatpyes.
@@ -34,6 +35,8 @@ class Message:
                     fmt += 'c'
                 if datatype == 'string':
                     fmt += str(self.max_str_len)+'s'
+                if datatype == 'varstring':
+                    raise('not done yet')
                 if datatype == 'bool':
                     fmt += 'b'
             else:

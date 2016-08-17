@@ -1,11 +1,16 @@
 from tkinter import *
 from tkinter import ttk
 from src.client import Client
-from server import chat_server
+#from server import chat_server
 from src.net import Message
 
 
 class ChatDemo(Client, Frame):
+    ''' The ChatDemo class is a basic chat program built using Tk. It inherits from the Frame class and the Client class.
+    This is the controller for the program, everything is controlled thorugh this class. Ignore messy GUI code... just a demo.
+
+    '''
+
     def __init__(self, root):
         Client.__init__(self)
         Frame.__init__(self, root)
@@ -24,9 +29,11 @@ class ChatDemo(Client, Frame):
 
         self.build_gui()
 
+        self.connect_request = Message('CONN')
         self.chat_message = Message('CHAT', ('string',))
 
     def build_gui(self):
+        ''' Builds the GUI for the program '''
         self.root.title("Chat Demo")
 
         menubar = Menu(self.root)
@@ -55,12 +62,12 @@ class ChatDemo(Client, Frame):
 
         host_label = Label(top, text='Host')
         host_label.grid(column=0, row=0, sticky=W, padx=(5,5), pady=(0,10), columnspan=1)
-        host_entry = Entry(top, width=32)
+        host_entry = Entry(top, width=32, textvariable=self.host_entry_text)
         host_entry.grid(column=1, row=0, sticky=W, padx=(5,5), pady=(0,10), columnspan=1)
 
         port_label = Label(top, text='Port')
         port_label.grid(column=0, row=1, sticky=W, padx=(5,5), pady=(0,10), columnspan=1)
-        port_entry = Entry(top, width=32)
+        port_entry = Entry(top, width=32, textvariable=self.port_entry_text)
         port_entry.grid(column=1, row=1, sticky=W, padx=(5,5), pady=(0,10), columnspan=1)
 
         start_button = Button(top, text='Start', command=self.start_server)
@@ -87,20 +94,26 @@ class ChatDemo(Client, Frame):
 
     def start_server(self):
         self.chat_window.configure(state=NORMAL)
-        self.chat_window.insert(END, 'Server started on host and port\n')
+        self.chat_window.insert(END, '[!] Server started on {0}:{1}\n'.format(self.host_entry_text.get(), self.port_entry_text.get()))
+        self.chat_window.insert(END, '[!] Can now connect to a server\n')
         self.chat_window.configure(state=DISABLED)
 
-        chat_server.start()
+        #chat_server.start()
 
     def connect_to_server(self):
         self.send_connect_request((self.host_entry_text.get(), int(self.port_entry_text.get())))
+        self.chat_window.configure(state=NORMAL)
+        self.chat_window.insert(END, '[!] Connected to {0}:{1}\n'.format(self.host_entry_text.get(), self.port_entry_text.get()))
+        self.chat_window.configure(state=DISABLED)
 
     def send_chat_message(self):
         self.chat_window.configure(state=NORMAL)
         m = self.chat_message.pack(self.chat_entry_text.get().encode())
         self.simple_send(m)
+        self.sock.sendto(m, ('localhost', 8080))
         self.chat_window.insert(END, m.decode()+'\n')
         self.chat_window.configure(state=DISABLED)
+        print(m)
 
 
 def main():

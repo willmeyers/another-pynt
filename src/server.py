@@ -25,7 +25,7 @@ class Server:
         self.sock.setblocking(False)
         self.sock.bind(self.address)
 
-        self.received_messages = deque()
+        self.incoming_messages = deque()
         self.outgoing_messages = deque()
         self.messages_needing_ack = deque()
 
@@ -54,9 +54,6 @@ class Server:
         print(message_id)
         self.message_callbacks[message_id](message)
 
-    def accept_connection(self):
-        pass
-
     def simple_send(self, message, addr):
         pass
 
@@ -81,8 +78,8 @@ class Server:
                 message, addr = self.sock.recvfrom(self.config['RECV_BYTES'])
 
                 if message:
-                    print(message)
-                    self.read_message(message, addr)
+                    print('FROM A CLIENT', message)
+
             except Exception:
                 pass
 
