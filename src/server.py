@@ -9,7 +9,7 @@ class Server:
         'PORT': 8080,
         'MAX_RECV_BYTES': 1024,
         'TICK_RATE': 30,
-        'ACK_REFRESH_TIME': 200 # in ms
+        'ACK_UPDATE_RATE': 1000 # in ms
     }
 
     def __init__(self, host, port, config=None):
@@ -29,7 +29,7 @@ class Server:
         self.outgoing_messages = deque()
         self.messages_needing_ack = deque()
 
-        self.clients = {}
+        self.clients = []
         self.pending_disconnects = []
 
         self.message_map = {}
@@ -64,10 +64,16 @@ class Server:
         pass
 
     def simple_broadcast(self, message):
-        pass
+        for client in self.clients:
+            self.simple_send(message, client)
 
     def reliable_broadcast(self, message):
         pass
+
+    def refresh_acks(self):
+        while self.messages_needing_ack:
+            msg = self.messages_needing_ack.pop()
+            self.simple_send(msg, msg.addr)
 
     def run(self):
         while self.running:
