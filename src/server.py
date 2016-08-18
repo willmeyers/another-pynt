@@ -75,7 +75,7 @@ class Server:
     def run(self):
         while self.running:
             try:
-                message, addr = self.sock.recvfrom(self.config['RECV_BYTES'])
+                message, addr = self.sock.recvfrom(1024)
 
                 if message:
                     print('FROM A CLIENT', message)
