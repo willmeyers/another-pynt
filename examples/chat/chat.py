@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from src.client import Client
-#from server import chat_server
+from server import chat_server
 from src.net import Message
 
 
@@ -98,7 +98,7 @@ class ChatDemo(Client, Frame):
         self.chat_window.insert(END, '[!] Can now connect to a server\n')
         self.chat_window.configure(state=DISABLED)
 
-        #chat_server.start()
+        chat_server.start()
 
     def connect_to_server(self):
         self.send_connect_request((self.host_entry_text.get(), int(self.port_entry_text.get())))
