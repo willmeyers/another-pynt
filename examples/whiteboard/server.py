@@ -15,4 +15,6 @@ class AppServer:
 
         for i in r:
             if i == self.sock:
-                print(self.sock.recvfrom(1024))
+                message, addr = self.sock.recvfrom(1024)
+                print('FROM CLIENT: ', message)
+                self.sock.sendto(message, addr)
