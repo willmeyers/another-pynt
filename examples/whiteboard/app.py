@@ -21,7 +21,7 @@ class App:
 
         self.running = True
 
-        self.server = AppServer()
+        self.server = None
 
     def update(self):
         self.mouse_pos = pygame.mouse.get_pos()
@@ -47,15 +47,19 @@ class App:
                     self.sock.sendto(m, ('localhost', 8080))
             if e.type == pygame.KEYDOWN and e.key == pygame.K_c:
                 self.window.fill((0, 0, 0))
+            if e.type == pygame.KEYDOWN and e.key == pygame.K_q:
+                self.sock.sendto(b'CONN', ('localhost', 8080))
             if e.type == pygame.KEYDOWN and e.key == pygame.K_s:
-                pass
+                self.server = AppServer()
 
     def run(self):
         self.update()
         self.render(self.window)
         self.handle_events(pygame.event.get())
-        self.server.run()
         self.clock.tick(60)
+
+        if self.server:
+            self.server.run()
 
         r, w, e = select.select([self.sock], [self.sock], [])
         for i in r:
@@ -63,7 +67,9 @@ class App:
                 message, addr = self.sock.recvfrom(1024)
                 print('FROM SERVER: ', message)
                 if message[:4] == b'DRAW':
-                    pygame.draw.circle(self.window, (255, 255, 255), (self.mouse_pos[0]-50, self.mouse_pos[1]), 5)
+                    x = int(message[4:7])
+                    y = int(message[7:])
+                    pygame.draw.circle(self.window, (255, 255, 255), (x, y), 5)
 
 
     def close(self):
