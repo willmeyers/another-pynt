@@ -78,7 +78,7 @@ class Server:
                 message, addr = self.sock.recvfrom(1024)
 
                 if message:
-                    print('FROM A CLIENT', message)
+                    print(message[:4], message)
 
             except Exception:
                 pass

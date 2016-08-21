@@ -16,13 +16,14 @@ class Message:
         self.message_datatypes = message_datatypes
         self.max_str_len = max_str_len
         self._msg_struct = struct.Struct(self._get_fmt_string())
+
         self.requires_ack = requires_ack
 
     def _get_fmt_string(self):
         """ Returns the format string required for the message struct based on the datatpyes.
 
         """
-        fmt = '>'
+        fmt = '>4s'
         for datatype in self.message_datatypes:
             if datatype in self.VALID_DATAYPES:
                 if datatype == 'int':

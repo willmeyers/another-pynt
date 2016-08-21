@@ -1,7 +1,7 @@
 import pygame
 import random
 import socket
-from server import server
+from server import AppServer
 from src.net import Message
 
 
@@ -17,9 +17,9 @@ class App:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setblocking(False)
 
-        self.draw_message = Message(b'DRAW', ('int', 'int'))
-
         self.running = True
+
+        self.server = AppServer()
 
     def update(self):
         self.mouse_pos = pygame.mouse.get_pos()
@@ -39,19 +39,18 @@ class App:
             if e.type == pygame.MOUSEMOTION:
                 if self.is_drawing:
                     pygame.draw.circle(self.window, self.client_color, self.mouse_pos, 5)
-                    m = self.draw_message.pack(self.mouse_pos[0], self.mouse_pos[1])
-                    self.sock.sendto(m, ('localhost', 8080))
+                    self.sock.sendto(b'DRAW', ('localhost', 8080))
             if e.type == pygame.KEYDOWN and e.key == pygame.K_c:
                 self.window.fill((0, 0, 0))
             if e.type == pygame.KEYDOWN and e.key == pygame.K_s:
-                server.start()
+                pass
 
     def run(self):
         self.update()
         self.render(self.window)
         self.handle_events(pygame.event.get())
+        self.server.run()
         self.clock.tick(60)
 
     def close(self):
         pygame.quit()
-        server.shutdown()
