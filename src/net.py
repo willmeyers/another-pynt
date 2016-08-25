@@ -6,10 +6,11 @@ class Message:
         Messages must be given an identifier (4 bytes) and a tuple of datatypes
         that the message will store.
 
-        example_message = Message('EXPL', ('int', 'int', 'float'))
+        example_message = Message('EXAMPLE', ('int', 'int', 'float'))
+        |-Msg Object--|           |-Msg id-| |- Msg required args -|
 
     """
-    VALID_DATAYPES = ['int', 'float', 'char', 'string', 'varstring', 'bool']
+    VALID_DATAYPES = ['int', 'float', 'char', 'string', 'bool']
 
     def __init__(self, message_id, message_datatypes=(), max_str_len=32, requires_ack=False):
         self.message_id = message_id
@@ -19,11 +20,17 @@ class Message:
 
         self.requires_ack = requires_ack
 
+        self.message_id_length = len(str(self.message_id))
+
     def _get_fmt_string(self):
         """ Returns the format string required for the message struct based on the datatpyes.
 
+            Since the Message object is a Struct, a format string must be provided.
+            This private method builds the format string based on the given parameters set by
+            the developer.
+
         """
-        fmt = '>4s'
+        fmt = '>'+str(self.message_id_length)
         for datatype in self.message_datatypes:
             if datatype in self.VALID_DATAYPES:
                 if datatype == 'int':
@@ -36,12 +43,10 @@ class Message:
                     fmt += 'c'
                 if datatype == 'string':
                     fmt += str(self.max_str_len)+'s'
-                if datatype == 'varstring':
-                    raise('not done yet')
                 if datatype == 'bool':
                     fmt += 'b'
             else:
-                raise('Bad datatype')
+                print('Datatype is not supported!')
 
         return fmt
 
