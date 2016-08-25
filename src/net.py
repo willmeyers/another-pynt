@@ -7,13 +7,27 @@ class Message:
         that the message will store.
 
         example_message = Message('EXAMPLE', ('int', 'int', 'float'))
-        |-Msg Object--|           |-Msg id-| |- Msg required args -|
+        |- Msg Object -|         |- Msg id -| |- Required msg args -|
 
+        The message_id argument is locked at 4 bytes at the moment. All message
+        ids must be 4 bytes in length or errors will occur. This will be changed
+        to a more dynamic solution in future releases, however it isn't that
+        big of an issue.
+
+        `VALID_DATATYPES` is a list of all the available data types currently
+        allowed.
+            int: 32bit integer
+            float: 32bit float
+            char: 8bit integer
+            string: Char array or 8bit integer array - must specify length
+            bool: Boolean value
+
+            Will be adding support for much more data types (varstring, double...)
     """
     VALID_DATAYPES = ['int', 'float', 'char', 'string', 'bool']
 
     def __init__(self, message_id, message_datatypes, max_str_len=32, requires_ack=False):
-        self.message_id = message_id
+        self.message_id = str(message_id).encode()
         self.message_datatypes = message_datatypes
         self.max_str_len = max_str_len
 

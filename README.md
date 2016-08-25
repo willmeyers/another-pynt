@@ -1,2 +1,1 @@
-# apynt
-## Another Python Networking Tool
+# Another Python Networking Tool (apynt)
