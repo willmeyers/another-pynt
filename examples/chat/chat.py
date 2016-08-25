@@ -29,7 +29,7 @@ class ChatDemo(Client, Frame):
 
         self.build_gui()
 
-        self.connect_request = Message(b'CONN', ())
+        self.connect_request = Message(b'CONN', ('string',))
         self.chat_message = Message(b'CHAT', ('string',))
 
     def build_gui(self):
@@ -102,6 +102,8 @@ class ChatDemo(Client, Frame):
 
     def connect_to_server(self):
         self.set_server_addr((self.host_entry_text.get(), int(self.port_entry_text.get())))
+        m = self.connect_request.pack(b'Bobby Bills')
+        self.simple_send(m)
         self.chat_window.configure(state=NORMAL)
         self.chat_window.insert(END, '[!] Connected to {0}:{1}\n'.format(self.host_entry_text.get(), self.port_entry_text.get()))
         self.chat_window.configure(state=DISABLED)
@@ -112,7 +114,6 @@ class ChatDemo(Client, Frame):
         self.simple_send(m)
         self.chat_window.insert(END, m.decode()+'\n')
         self.chat_window.configure(state=DISABLED)
-        print(m)
 
 
 def main():

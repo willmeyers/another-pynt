@@ -64,6 +64,7 @@ class Server:
 
                 if message:
                     print('FROM CLIENT', message)
+                    self.message_map[message[:4]](message)
 
             except Exception:
                 pass
