@@ -42,12 +42,10 @@ class Server:
         return decorator
 
     def read_message(self, message):
-        message_id = message[:4].decode()
-        print(message_id)
-        self.message_map[message_id]
+        pass
 
     def simple_send(self, message, addr):
-        pass
+        self.sock.sendto(message, addr)
 
     def simple_broadcast(self, message):
         for client in self.clients:
@@ -65,7 +63,7 @@ class Server:
                 message, addr = self.sock.recvfrom(1024)
 
                 if message:
-                    print(message[:4], message)
+                    print('FROM CLIENT', message)
 
             except Exception:
                 pass

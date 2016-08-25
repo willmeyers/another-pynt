@@ -29,8 +29,8 @@ class ChatDemo(Client, Frame):
 
         self.build_gui()
 
-        self.connect_request = Message('CONN')
-        self.chat_message = Message('CHAT', ('string',))
+        self.connect_request = Message(b'CONN', ())
+        self.chat_message = Message(b'CHAT', ('string',))
 
     def build_gui(self):
         ''' Builds the GUI for the program '''
@@ -101,7 +101,7 @@ class ChatDemo(Client, Frame):
         chat_server.start()
 
     def connect_to_server(self):
-        self.send_connect_request((self.host_entry_text.get(), int(self.port_entry_text.get())))
+        self.set_server_addr((self.host_entry_text.get(), int(self.port_entry_text.get())))
         self.chat_window.configure(state=NORMAL)
         self.chat_window.insert(END, '[!] Connected to {0}:{1}\n'.format(self.host_entry_text.get(), self.port_entry_text.get()))
         self.chat_window.configure(state=DISABLED)
@@ -110,7 +110,6 @@ class ChatDemo(Client, Frame):
         self.chat_window.configure(state=NORMAL)
         m = self.chat_message.pack(self.chat_entry_text.get().encode())
         self.simple_send(m)
-        self.sock.sendto(m, ('localhost', 8080))
         self.chat_window.insert(END, m.decode()+'\n')
         self.chat_window.configure(state=DISABLED)
         print(m)

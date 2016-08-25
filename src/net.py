@@ -12,7 +12,7 @@ class Message:
     """
     VALID_DATAYPES = ['int', 'float', 'char', 'string', 'bool']
 
-    def __init__(self, message_id, message_datatypes=(), max_str_len=32, requires_ack=False):
+    def __init__(self, message_id, message_datatypes, max_str_len=32, requires_ack=False):
         self.message_id = message_id
         self.message_datatypes = message_datatypes
         self.max_str_len = max_str_len
@@ -52,13 +52,13 @@ class Message:
         return fmt
 
     def pack(self, *args):
-        """ Returns a byte string given a list of arguments
+        """ Returns a bytes given a list of arguments
 
             example_message = Message('EXPL', ('int', 'int', 'float'))
             message_to_send = example_message.pack(14, 89, 0.67)
 
         """
-        return self._msg_struct.pack(*args)
+        return self._msg_struct.pack(self.message_id, *args)
 
     def unpack(self, raw_message):
         """ Returns a tuple with the unpacked values from the message.

@@ -34,28 +34,28 @@ class Client:
         self.config['SERVER_ADDR'] = addr
 
     def simple_send(self, message):
-        ''' Sends an unreliable message to the configured server address. Simple
+        """ Sends an unreliable message to the configured server address. Simple
         send is recommended for bulk sends. Depending on the application; sending
         keyboard input, updating variables...
 
         :param message: a message object
-        '''
+        """
         self.outgoing_messages.append(message)
         while self.outgoing_messages:
             m = self.outgoing_messages.pop()
-            self.sock.sendto(m, ('localhost', 8080))
+            self.sock.sendto(m, self.config['SERVER_ADDR'])
 
     def add_message_rule(self, message_id, message_function):
-        ''' Adds a message rule to the message map. This is the same as using the
+        """ Adds a message rule to the message map. This is the same as using the
         message decorator.
 
         :param message_id: the message id
         :param message_function: the function bound to the message id
-        '''
+        """
         self.message_map[message_id] = message_function
 
     def message(self, message_id):
-        ''' A decorator function for easy message rule mapping.
+        """ A decorator function for easy message rule mapping.
 
             @message('CHAT')
             def chat_message(text):
@@ -63,7 +63,7 @@ class Client:
                 ...
 
         :param message_id: the message id
-        '''
+        """
         def decorator(f):
             self.add_message_rule(message_id, f)
             return f
@@ -76,4 +76,3 @@ class Client:
             if i == self.sock:
                 message, addr = self.sock.recvfrom(1024)
                 print('FROM SERVER', message)
-                self.incoming_messages.append((message, addr))
