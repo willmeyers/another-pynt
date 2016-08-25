@@ -25,7 +25,7 @@ class Server:
         self.incoming_messages = deque()
         self.outgoing_messages = deque()
 
-        self.clients = []
+        self.clients = {}
 
         self.message_map = {}
 
@@ -41,9 +41,6 @@ class Server:
 
         return decorator
 
-    def read_message(self, message):
-        pass
-
     def simple_send(self, message, addr):
         self.sock.sendto(message, addr)
 
@@ -51,11 +48,13 @@ class Server:
         for client in self.clients:
             self.simple_send(message, client)
 
-    def connect_client(self, addr):
-        self.clients.append(addr)
+    def connect_client(self, client_key, addr):
+        print('connecting', client_key, addr)
+        self.clients[client_key] = addr
 
-    def disconnect_client(self, addr):
-        self.clients.remove(addr)
+    def disconnect_client(self, client_key):
+        print('disconnecting', client_key)
+        del self.clients[client_key]
 
     def run(self):
         while self.running:
@@ -64,7 +63,7 @@ class Server:
 
                 if message:
                     print('FROM CLIENT', message)
-                    self.message_map[message[:4]](message)
+                    self.message_map[message[:4]](message, addr)
 
             except Exception:
                 pass
@@ -75,7 +74,7 @@ class Server:
         t.start()
 
     def shutdown(self):
-        for client in self.clients:
+        for client in self.clients.items():
             self.disconnect_client(client)
 
         self.sock.close()
