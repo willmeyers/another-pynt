@@ -16,11 +16,11 @@ class Message:
         self.message_id = message_id
         self.message_datatypes = message_datatypes
         self.max_str_len = max_str_len
+
+        self.message_id_length = str(len(self.message_id))
         self._msg_struct = struct.Struct(self._get_fmt_string())
 
         self.requires_ack = requires_ack
-
-        self.message_id_length = len(str(self.message_id))
 
     def _get_fmt_string(self):
         """ Returns the format string required for the message struct based on the datatpyes.
@@ -30,7 +30,8 @@ class Message:
             the developer.
 
         """
-        fmt = '>'+str(self.message_id_length)
+        fmt = '>'
+        fmt += self.message_id_length + 's'
         for datatype in self.message_datatypes:
             if datatype in self.VALID_DATAYPES:
                 if datatype == 'int':

@@ -7,8 +7,8 @@ class Client:
     server_address = None
 
     default_config = {
+        'SERVER_ADDR': None,
         'MAX_RECV_BYTES': 1024,
-        'TICK_RATE': 30,
     }
 
     def __init__(self, config=None):
@@ -30,8 +30,8 @@ class Client:
 
         self.running = True
 
-    def send_connect_request(self, server_addr):
-        pass
+    def set_server_addr(self, addr):
+        self.config['SERVER_ADDR'] = addr
 
     def simple_send(self, message):
         ''' Sends an unreliable message to the configured server address. Simple
