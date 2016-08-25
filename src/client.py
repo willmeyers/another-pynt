@@ -75,4 +75,4 @@ class Client:
         for i in r:
             if i == self.sock:
                 message, addr = self.sock.recvfrom(1024)
-                print('FROM SERVER', message)
+                print(message, addr)

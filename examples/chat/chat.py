@@ -112,6 +112,7 @@ class ChatDemo(Client, Frame):
         self.chat_window.configure(state=NORMAL)
         m = self.chat_message.pack(self.chat_entry_text.get().encode())
         self.simple_send(m)
+        print(m)
         self.chat_window.insert(END, m.decode()+'\n')
         self.chat_window.configure(state=DISABLED)
 

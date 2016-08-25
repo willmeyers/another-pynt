@@ -45,8 +45,12 @@ class Server:
         self.sock.sendto(message, addr)
 
     def simple_broadcast(self, message):
-        for client in self.clients:
-            self.simple_send(message, client)
+        try:
+            for key, addr in self.clients.items():
+                self.simple_send(message, addr)
+                print('SENT TO:', addr)
+        except Exception as err:
+            print(err)
 
     def connect_client(self, client_key, addr):
         print('connecting', client_key, addr)
@@ -62,7 +66,6 @@ class Server:
                 message, addr = self.sock.recvfrom(1024)
 
                 if message:
-                    print('FROM CLIENT', message)
                     self.message_map[message[:4]](message, addr)
 
             except Exception:
@@ -74,8 +77,8 @@ class Server:
         t.start()
 
     def shutdown(self):
-        for client in self.clients.items():
-            self.disconnect_client(client)
+        for client_key, _ in self.clients.items():
+            self.disconnect_client(client_key)
 
         self.sock.close()
         self.running = False
