@@ -1,5 +1,5 @@
 import socket
-import select
+import threading
 from collections import deque
 
 
@@ -69,10 +69,22 @@ class Client:
             return f
 
         return decorator
-
     def run(self):
-        r, w, e = select.select([self.sock], [self.sock], [], 0)
-        for i in r:
-            if i == self.sock:
+        while self.running:
+            try:
                 message, addr = self.sock.recvfrom(1024)
-                print(message, addr)
+
+                if message:
+                    self.message_map[message[:4].decode()](message, addr)
+
+            except Exception:
+                pass
+
+    def start(self):
+        print('Client thread started.')
+        t = threading.Thread(target=self.run)
+        t.start()
+
+    def shutdown(self):
+        self.sock.close()
+        self.running = False

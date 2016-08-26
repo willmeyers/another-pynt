@@ -58,8 +58,6 @@ class Message:
                     fmt += str(self.max_str_len)+'s'
                 if datatype == 'bool':
                     fmt += 'b'
-            else:
-                print('Datatype is not supported!')
 
         return fmt
 

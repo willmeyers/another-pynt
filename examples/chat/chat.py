@@ -14,6 +14,8 @@ class ChatDemo(Client, Frame):
     def __init__(self, root):
         Client.__init__(self)
         Frame.__init__(self, root)
+        self.start()
+
         self.root = root
         self.frame = Frame(self.root)
         self.frame.grid()
@@ -29,8 +31,14 @@ class ChatDemo(Client, Frame):
 
         self.build_gui()
 
-        self.connect_request = Message(b'CONN', ('string',))
-        self.chat_message = Message(b'CHAT', ('string',))
+        self.connect_request = Message('CONN', ('string',))
+        self.chat_message = Message('CHAT', ('string',))
+
+        @self.message('CHAT')
+        def chat_recv(message, addr):
+            _, m = self.chat_message.unpack(message)
+            print('FROM SERVER:', m)
+            self.print_chat_message(m)
 
     def build_gui(self):
         ''' Builds the GUI for the program '''
@@ -102,7 +110,8 @@ class ChatDemo(Client, Frame):
 
     def connect_to_server(self):
         self.set_server_addr((self.host_entry_text.get(), int(self.port_entry_text.get())))
-        m = self.connect_request.pack(b'Bobby Bills')
+        name = input('ENTER NAME > ')
+        m = self.connect_request.pack(name.encode())
         self.simple_send(m)
         self.chat_window.configure(state=NORMAL)
         self.chat_window.insert(END, '[!] Connected to {0}:{1}\n'.format(self.host_entry_text.get(), self.port_entry_text.get()))
@@ -112,8 +121,11 @@ class ChatDemo(Client, Frame):
         self.chat_window.configure(state=NORMAL)
         m = self.chat_message.pack(self.chat_entry_text.get().encode())
         self.simple_send(m)
-        print(m)
-        self.chat_window.insert(END, m.decode()+'\n')
+        self.chat_window.configure(state=DISABLED)
+
+    def print_chat_message(self, message):
+        self.chat_window.configure(state=NORMAL)
+        self.chat_window.insert(END, message.decode()+'\n')
         self.chat_window.configure(state=DISABLED)
 
 
@@ -121,6 +133,8 @@ def main():
     root = Tk()
     app = ChatDemo(root)
     root.mainloop()
+
+    app.shutdown()
 
 
 if __name__ == '__main__':
