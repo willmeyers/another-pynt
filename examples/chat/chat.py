@@ -117,6 +117,7 @@ class ChatDemo(Client, Frame):
         self.chat_window.insert(END, '[!] Connected to {0}:{1}\n'.format(self.host_entry_text.get(), self.port_entry_text.get()))
         self.chat_window.configure(state=DISABLED)
 
+
     def send_chat_message(self):
         self.chat_window.configure(state=NORMAL)
         m = self.chat_message.pack(self.chat_entry_text.get().encode())

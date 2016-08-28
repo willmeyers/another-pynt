@@ -3,11 +3,14 @@ import random
 import socket
 import select
 from server import AppServer
+from src.client import Client
 from src.net import Message
 
 
-class App:
+class App(Client):
     def __init__(self):
+        Client.__init__(self)
+
         self.window = pygame.display.set_mode((640, 480))
         self.clock = pygame.time.Clock()
         self.window.fill((255, 255, 255))
@@ -16,11 +19,7 @@ class App:
         self.client_color = (0, 0, 0)
         self.is_drawing = False
 
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind(('', 0))
-        self.sock.setblocking(False)
-
-        self.running = True
+        self.start()
 
         self.server = None
 
