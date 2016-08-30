@@ -2,7 +2,7 @@ import pygame
 import random
 import socket
 import select
-from server import AppServer
+from server import app_server
 from src.client import Client
 from src.net import Message
 
@@ -16,12 +16,20 @@ class App(Client):
         self.window.fill((255, 255, 255))
 
         self.mouse_pos = None
-        self.client_color = (0, 0, 0)
+        self.client_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         self.is_drawing = False
 
         self.start()
 
         self.server = None
+
+        self.connect_request = Message('CONN', ('string',))
+        self.draw_message = Message('DRAW', ('int', 'int', 'int', 'int', 'int'))
+
+        @self.message('DRAW')
+        def draw_recv(message, addr):
+            x, y, c0, c1, c2 = self.draw_message.unpack(message)
+            pygame.draw.circle(self.window, (c0, c1, c2), (x, y), 5)
 
     def update(self):
         self.mouse_pos = pygame.mouse.get_pos()
@@ -34,30 +42,31 @@ class App(Client):
             if e.type == pygame.QUIT:
                 self.running = False
             if e.type == pygame.MOUSEBUTTONDOWN:
-                m = b'DRAW'+str(self.mouse_pos[0]).encode()+str(self.mouse_pos[1]).encode()
+                m = self.draw_message.pack(self.mouse_pos[0], self.mouse_pos[1], self.client_color[0], self.client_color[1], self.client_color[2])
                 self.sock.sendto(m, ('localhost', 8080))
                 self.is_drawing = True
             if e.type == pygame.MOUSEBUTTONUP:
                 self.is_drawing = False
             if e.type == pygame.MOUSEMOTION:
                 if self.is_drawing:
-                    m = b'DRAW'+str(self.mouse_pos[0]).encode()+str(self.mouse_pos[1]).encode()
+                    m = self.draw_message.pack(self.mouse_pos[0], self.mouse_pos[1], self.client_color[0], self.client_color[1], self.client_color[2])
                     self.sock.sendto(m, ('localhost', 8080))
             if e.type == pygame.KEYDOWN and e.key == pygame.K_c:
                 self.window.fill((255, 255, 255))
             if e.type == pygame.KEYDOWN and e.key == pygame.K_q:
-                self.sock.sendto(b'CONN', ('localhost', 8080))
+                name = input('ENTER A NAME > ')
+                m = self.connect_request.pack(name.encode())
+                self.sock.sendto(m, ('localhost', 8080))
+
             if e.type == pygame.KEYDOWN and e.key == pygame.K_s:
-                self.server = AppServer()
+                self.server = app_server
+                self.server.start()
 
     def run(self):
         self.update()
         self.render(self.window)
         self.handle_events(pygame.event.get())
         self.clock.tick()
-
-        if self.server:
-            self.server.run()
 
         r, w, e = select.select([self.sock], [self.sock], [])
         for i in r:
