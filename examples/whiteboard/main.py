@@ -5,7 +5,7 @@ def main():
     client = App()
 
     while client.running:
-        client.run()
+        client.run_app()
 
     client.close()
 

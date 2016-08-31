@@ -1,11 +1,10 @@
 import socket
+import select
 import threading
 from collections import deque
 
 
 class Client:
-    server_address = None
-
     default_config = {
         'SERVER_ADDR': None,
         'MAX_RECV_BYTES': 1024,
@@ -19,7 +18,7 @@ class Client:
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.sock.setblocking(False)
+        #self.sock.setblocking(False)
         self.sock.bind(('', 0))
 
         self.incoming_messages = deque()
@@ -36,7 +35,7 @@ class Client:
     def simple_send(self, message):
         """ Sends an unreliable message to the configured server address. Simple
         send is recommended for bulk sends. Depending on the application; sending
-        keyboard input, updating variables...
+        keyboard input, updating variables... Using a  deque for future use.
 
         :param message: a message object
         """
@@ -44,15 +43,6 @@ class Client:
         while self.outgoing_messages:
             m = self.outgoing_messages.pop()
             self.sock.sendto(m, self.config['SERVER_ADDR'])
-
-    def add_message_rule(self, message_id, message_function):
-        """ Adds a message rule to the message map. This is the same as using the
-        message decorator.
-
-        :param message_id: the message id
-        :param message_function: the function bound to the message id
-        """
-        self.message_map[message_id] = message_function
 
     def message(self, message_id):
         """ A decorator function for easy message rule mapping.
@@ -65,10 +55,11 @@ class Client:
         :param message_id: the message id
         """
         def decorator(f):
-            self.add_message_rule(message_id, f)
+            self.message_map[message_id] = f
             return f
 
         return decorator
+
     def run(self):
         while self.running:
             try:
@@ -81,7 +72,7 @@ class Client:
                 pass
 
     def start(self):
-        print('Client thread started.')
+        print('Started client thread.')
         t = threading.Thread(target=self.run)
         t.start()
 

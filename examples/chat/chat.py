@@ -32,13 +32,17 @@ class ChatDemo(Client, Frame):
         self.build_gui()
 
         self.connect_request = Message('CONN', ('string',))
-        self.chat_message = Message('CHAT', ('string',))
+        self.chat_message = Message('CHAT', ('string', 'string'))
+
+        self.name = None
 
         @self.message('CHAT')
         def chat_recv(message, addr):
-            _, m = self.chat_message.unpack(message)
-            print('FROM SERVER:', m)
-            self.print_chat_message(m)
+            try:
+                _, name, m = self.chat_message.unpack(message)
+                self.print_chat_message(name, m)
+            except Exception as err:
+                print(err)
 
     def build_gui(self):
         ''' Builds the GUI for the program '''
@@ -102,31 +106,30 @@ class ChatDemo(Client, Frame):
 
     def start_server(self):
         self.chat_window.configure(state=NORMAL)
-        self.chat_window.insert(END, '[!] Server started on {0}:{1}\n'.format(self.host_entry_text.get(), self.port_entry_text.get()))
-        self.chat_window.insert(END, '[!] Can now connect to a server\n')
+        self.chat_window.insert(END, 'Started server.\n')
         self.chat_window.configure(state=DISABLED)
 
         chat_server.start()
 
     def connect_to_server(self):
         self.set_server_addr((self.host_entry_text.get(), int(self.port_entry_text.get())))
-        name = input('ENTER NAME > ')
-        m = self.connect_request.pack(name.encode())
+        self.name = input('ENTER NAME > ')
+        m = self.connect_request.pack(self.name.encode())
         self.simple_send(m)
         self.chat_window.configure(state=NORMAL)
-        self.chat_window.insert(END, '[!] Connected to {0}:{1}\n'.format(self.host_entry_text.get(), self.port_entry_text.get()))
+        self.chat_window.insert(END, 'Successfully connected to server.\n')
         self.chat_window.configure(state=DISABLED)
-
 
     def send_chat_message(self):
         self.chat_window.configure(state=NORMAL)
-        m = self.chat_message.pack(self.chat_entry_text.get().encode())
+        m = self.chat_message.pack(self.name.encode(), self.chat_entry_text.get().encode())
         self.simple_send(m)
+        self.chat_entry_text.set('')
         self.chat_window.configure(state=DISABLED)
 
-    def print_chat_message(self, message):
+    def print_chat_message(self, name, message):
         self.chat_window.configure(state=NORMAL)
-        self.chat_window.insert(END, message.decode()+'\n')
+        self.chat_window.insert(END, name.decode().rstrip('\0')+'> '+message.decode().rstrip('\0')+'\n')
         self.chat_window.configure(state=DISABLED)
 
 

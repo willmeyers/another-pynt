@@ -47,7 +47,6 @@ class Server:
     def simple_broadcast(self, message):
         for key, addr in self.clients.items():
             self.simple_send(message, addr)
-            print('SENT TO:', addr)
 
     def connect_client(self, client_key, addr):
         print('connecting', client_key, addr)
