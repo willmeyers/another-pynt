@@ -3,6 +3,9 @@ Another Python Networking Tool (Apynt) is a easy to use networking utility for i
 custom protocols in applications. This project is still underdevelopment, however, building applications is still very
 possible with this current build.
 
+Apynt adopts Flask's `@app.route()` decorator syntax style in order to create client/server message receive callbacks.
+This tool is designed for ease of use and tries to provide easy integration in existing applications.
+
 ## Demos
 ### Chat application
 ![img](demo/chat.gif)
