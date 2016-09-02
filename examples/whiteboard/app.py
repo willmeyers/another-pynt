@@ -53,6 +53,7 @@ class App(Client):
                     self.simple_send(m)
             if e.type == pygame.KEYDOWN and e.key == pygame.K_c:
                 self.window.fill((255, 255, 255))
+                self.client_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             if e.type == pygame.KEYDOWN and e.key == pygame.K_q:
                 name = input('ENTER A NAME > ')
                 m = self.connect_request.pack(name.encode())
