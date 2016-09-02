@@ -3,11 +3,11 @@ Another Python Networking Tool (Apynt) is a Python networking utility that allow
 Python-based applications.  
 
 ## Demos
-Chat application
+### Chat application
 ![img](demo/chat.gif)
 
 
-Whiteboard application
+###Whiteboard application
 ![img](demo/whiteboard.gif)
 
 ## TODO
