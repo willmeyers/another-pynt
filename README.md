@@ -4,11 +4,11 @@ Python-based applications.
 
 ## Demos
 Chat application
-![img](demo/chat.webm)
+![img](demo/chat.gif)
 
 
 Whiteboard application
-![img](demo/whiteboard.webm)
+![img](demo/whiteboard.gif)
 
 ## TODO
 * Add a reliable-UDP send
