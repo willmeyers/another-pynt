@@ -1,5 +1,5 @@
 # Another Python Networking Tool (apynt)
-Another Python Networking Tool (Apynt) is a easy to use networking utility for integrating a client-server model and 
+Another Python Networking Tool (Apynt) is an easy to use networking utility for integrating a client-server model and 
 custom protocols in applications. This project is still underdevelopment, however, building applications is still very
 possible with this current build.
 
