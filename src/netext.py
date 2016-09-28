@@ -1,6 +1,4 @@
-import asyncio
 import threading
-import socket
 
 
 class NetExt:
@@ -10,7 +8,8 @@ class NetExt:
     def __repr__(self):
         pass
 
-    def __del__(self):
+    def __str__(self):
         pass
 
-    
+    def __del__(self):
+        pass
