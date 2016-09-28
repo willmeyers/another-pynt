@@ -1,32 +1,27 @@
 import socket
-import select
-from .net import Connection
 
 
 class Client:
     def __init__(self):
-        self.connection = None
-
-        self.config = {}
-
-        self.message_callbacks = {}
-
-        self.running = True
-
-    def connect(self, server_addr):
-        print('Attempting connection...')
-        self.connection = Connection(server_addr)
-        self.connection.simple_send(b'CONN')
-
-    def load_config_from_file(self):
         pass
 
-    def message(self, message_id):
-        def decorator(f):
-            self.message_callbacks[message_id] = f
-            return f
+    def __repr__(self):
+        pass
 
-        return decorator
+    def __del__(self):
+        pass
 
-    def run(self):
+    def message(self, command):
+        pass
+
+    def simple_send(self, message):
+        pass
+
+    def reliable_send(self, message):
+        pass
+
+    async def _send(self, message):
+        pass
+
+    async def _recv(self):
         pass

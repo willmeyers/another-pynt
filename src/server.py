@@ -1,60 +1,46 @@
 import socket
-import threading
 from collections import deque
 
 
 class Server:
-    def __init__(self, host, port):
-        self.address = (host, port)
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.sock.setblocking(False)
-        self.sock.bind(self.address)
+    default_config = {
+        'MAX_CONNECTIONS': 16,
+        'MAX_RECV_BYTES': 1024,
+    }
 
-        self.config = {}
+    def __init__(self):
+        self._socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self._socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self._socket.setblocking(False)
+        
+        self.config = self.default_config
 
-        self.received_messages = deque()
-        self.outgoing_messages = deque()
-        self.messages_needing_ack = deque()
+        self.sent_messages = deque()
+        self.recv_messages = deque()
+        self.ack_messages = deque()
 
-        self.clients = {}
-        self.pending_disconnects = []
+        self.messages = {}
 
-        self.message_callbacks = {}
-
-        self.running = True
-
-    def load_config_from_file(self):
+    def __repr__(self):
         pass
 
-    def message(self, message_id):
-        def decorator(f):
-            self.message_callbacks[message_id] = f
-            return f
+    def __del__(self):
+        pass
 
-        return decorator
+    def message(self, command):
+        pass
 
-    def read_message(self, message, addr):
-        message_id = message[:4].decode()
-        print(message_id)
-        self.message_callbacks[message_id](message)
+    def simple_send(self, message):
+        pass
 
-    def run(self):
-        while self.running:
-            try:
-                message, addr = self.sock.recvfrom(1024)
+    def reliable_send(self, message):
+        pass
 
-                if message:
-                    print(message)
-                    self.read_message(message, addr)
-            except Exception:
-                pass
+    async def _send(self, message):
+        pass
 
-    def start(self):
-        print('Started server thread.')
-        t = threading.Thread(target=self.run)
-        t.start()
+    async def _recv(self):
+        pass
 
-    def shutdown(self):
-        self.sock.close()
-        self.running = False
+    async def _bindto(self):
+        pass
