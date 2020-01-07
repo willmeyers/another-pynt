@@ -11,7 +11,7 @@ This tool is designed for ease of use and tries to provide easy integration in e
 ![img](demo/chat.gif)
 
 
-###Whiteboard application
+### Whiteboard application
 ![img](demo/whiteboard.gif)
 
 ## TODO
